@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+
+    <!-- Цвет фона, предпочтительно как в главной теме -->
+    <item android:drawable="@android:color/white" />
+
+    <!-- Лого приложения - 144dp версия иконки приложения -->
+    <item>
+        <bitmap
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="fill"
+            android:src="@drawable/cats" />
+    </item>
+
+<!--    <item>-->
+<!--        <bitmap-->
+<!--            android:gravity="bottom|right"-->
+<!--            android:src="@drawable/cat_2" />-->
+<!--    </item>-->
+</layer-list>
