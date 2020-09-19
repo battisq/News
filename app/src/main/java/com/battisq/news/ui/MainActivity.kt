@@ -1,10 +1,11 @@
-package com.battisq.news
+package com.battisq.news.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.battisq.news.R
 import com.battisq.news.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +22,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinging.root)
 
         mToolbar = mBinging.toolbar
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(this,
+            R.id.nav_host_fragment
+        )
         setSupportActionBar(mToolbar)
         title = getString(R.string.title)
     }
