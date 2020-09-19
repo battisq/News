@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mBinging.root)
 
         mToolbar = mBinging.toolbar
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
