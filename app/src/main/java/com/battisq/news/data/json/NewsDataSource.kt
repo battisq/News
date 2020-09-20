@@ -1,7 +1,10 @@
 package com.battisq.news.data.json
 
-import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
+data class News(
+    var status: String,
+    var totalResults: Int,
+    var articles: MutableList<NewsStory>
+)
 
 data class NewsStory(
     var source: Source,
@@ -10,8 +13,7 @@ data class NewsStory(
     var description: String,
     var url: String,
     var urlToImage: String?,
-    @SerializedName("publishedAt")
-    var date: LocalDateTime,
+    var publishedAt: String,
     var content: String
 )
 

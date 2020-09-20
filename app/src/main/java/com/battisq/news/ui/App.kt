@@ -1,6 +1,8 @@
 package com.battisq.news.ui
 
 import android.app.Application
+import com.battisq.news.di.appModule
+import com.battisq.news.di.retrofitModule
 import com.battisq.news.di.roomDataSourceModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,7 +18,9 @@ class App : Application() {
 
             modules(
                 listOf(
-                    roomDataSourceModule
+                    appModule,
+                    roomDataSourceModule,
+                    retrofitModule
                 )
             )
         }
