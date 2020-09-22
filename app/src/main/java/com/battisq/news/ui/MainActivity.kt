@@ -6,7 +6,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.battisq.news.R
+import com.battisq.news.data.api.NewsApi
+import com.battisq.news.data.json.NewsStory
+import com.battisq.news.data.room.dao.NewsDao
+import com.battisq.news.data.room.entities.NewsStoryEntity
 import com.battisq.news.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,12 +31,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinging.root)
 
         mToolbar = mBinging.toolbar
-        navController = Navigation.findNavController(this,
+        navController = Navigation.findNavController(
+            this,
             R.id.nav_host_fragment
         )
         setSupportActionBar(mToolbar)
         title = getString(R.string.title)
+
     }
+
+
+
 
     override fun onDestroy() {
         super.onDestroy()
