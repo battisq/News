@@ -3,6 +3,7 @@ package com.battisq.news.ui.list_news
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.battisq.news.R
 import com.battisq.news.data.room.entities.NewsStoryEntity
 import com.battisq.news.databinding.ListNewsFragmentBinding
+import com.battisq.news.ui.MainActivity
 import com.battisq.news.ui.list_news.recycler.ListNewsAdapter
 import com.battisq.news.ui.list_news.recycler.MainThreadExecutor
 import com.battisq.news.ui.list_news.recycler.NewsPositionalDataSource
+import com.battisq.news.ui.list_news.recycler.OnSelectedItemListener
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.android.viewmodel.ext.android.getViewModel
@@ -58,6 +61,17 @@ class ListNewsFragment : Fragment() {
         )
         viewModel = getViewModel { parametersOf(config) }
         viewModel.newsList.observe(this, Observer { adapter.submitList(it) })
+        adapter.setOnSelectedItem(object : OnSelectedItemListener {
+            override fun onSelected(position: Int, newsStory: NewsStoryEntity) {
+                val bundle = Bundle()
+                bundle.putString("urlSite", newsStory.url)
+
+                (activity as MainActivity)
+                    .navController
+                    .navigate(R.id.action_listNewsFragment_to_itemNewsFragment, bundle)
+            }
+        })
         recyclerView.adapter = adapter
+
     }
 }

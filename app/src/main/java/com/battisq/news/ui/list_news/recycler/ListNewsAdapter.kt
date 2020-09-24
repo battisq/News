@@ -17,17 +17,35 @@ import java.util.*
 class ListNewsAdapter() :
     PagedListAdapter<NewsStoryEntity, ListNewsHolder>(DIFF_CALLBACK) {
 
+    private var onSelectedItemListener: OnSelectedItemListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListNewsHolder {
         val view: View =
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_news_large_item, parent, false)
-        return ListNewsHolder(view)
+
+        val holder = ListNewsHolder(view)
+
+        holder.itemView.setOnClickListener {
+            val position = holder.adapterPosition
+
+            if (position != RecyclerView.NO_POSITION)
+                runOnSelectedItem(position, getItem(position)!!)
+        }
+
+        return holder
+    }
+
+    private fun runOnSelectedItem(position: Int, item: NewsStoryEntity) =
+        onSelectedItemListener?.onSelected(position, item)
+
+    fun setOnSelectedItem(listener: OnSelectedItemListener) {
+        onSelectedItemListener = listener
     }
 
     override fun onBindViewHolder(holder: ListNewsHolder, position: Int) {
         holder.bind(getItem(position))
     }
-
 
     companion object {
         private val DIFF_CALLBACK = object :
@@ -66,4 +84,8 @@ class ListNewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 )
         )
     }
+}
+
+interface OnSelectedItemListener {
+    fun onSelected(position: Int, newsStory: NewsStoryEntity)
 }
