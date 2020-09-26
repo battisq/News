@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/listNewsFragment">
+    app:startDestination="@id/listNewsFragment"
+    tools:ignore="UnusedNavigation">
 
     <fragment
         android:id="@+id/listNewsFragment"
@@ -12,7 +13,9 @@
         tools:layout="@layout/list_news_fragment" >
         <action
             android:id="@+id/action_listNewsFragment_to_itemNewsFragment"
-            app:destination="@id/itemNewsFragment" />
+            app:destination="@id/itemNewsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/itemNewsFragment"

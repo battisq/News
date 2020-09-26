@@ -7,13 +7,14 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.battisq.news.R
 import com.battisq.news.databinding.ActivityMainBinding
+import com.google.android.material.appbar.MaterialToolbar
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
     private var binding: ActivityMainBinding? = null
     private val mBinging: ActivityMainBinding get() = binding!!
-    private lateinit var mToolbar: Toolbar
+    private lateinit var mToolbar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -27,11 +28,7 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_host_fragment
         )
         setSupportActionBar(mToolbar)
-        title = getString(R.string.title)
     }
-
-
-
 
     override fun onDestroy() {
         super.onDestroy()

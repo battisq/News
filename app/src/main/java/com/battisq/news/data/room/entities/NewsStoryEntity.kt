@@ -16,19 +16,21 @@ data class NewsStoryEntity(
     val title: String,
     val description: String,
     val url: String,
+    val imageToUrl: String?,
 //    val image: Bitmap? = null,
     val date: LocalDateTime
 ) {
     companion object {
         @SuppressLint("NewApi")
         fun create(newsStory: NewsStory) = NewsStoryEntity(
-            title = newsStory.title,
+            title = newsStory.title ?: "",
             description = newsStory.description ?: "...",
             url = newsStory.url,
             date = LocalDateTime.parse(
                 newsStory.publishedAt,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-            )
+            ),
+            imageToUrl = newsStory.urlToImage
         )
     }
 }

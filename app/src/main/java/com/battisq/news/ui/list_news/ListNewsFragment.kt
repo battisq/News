@@ -1,31 +1,26 @@
 package com.battisq.news.ui.list_news
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.paging.Config
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.battisq.news.R
 import com.battisq.news.data.room.entities.NewsStoryEntity
 import com.battisq.news.databinding.ListNewsFragmentBinding
 import com.battisq.news.ui.MainActivity
 import com.battisq.news.ui.list_news.recycler.ListNewsAdapter
-import com.battisq.news.ui.list_news.recycler.MainThreadExecutor
-import com.battisq.news.ui.list_news.recycler.NewsPositionalDataSource
 import com.battisq.news.ui.list_news.recycler.OnSelectedItemListener
-import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.dsl.viewModel
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import org.koin.android.viewmodel.ext.android.getViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
+
 
 class ListNewsFragment : Fragment() {
 
@@ -37,6 +32,7 @@ class ListNewsFragment : Fragment() {
     private val mBinding: ListNewsFragmentBinding get() = binging!!
     private lateinit var viewModel: ListNewsViewModel
     private lateinit var recyclerView: RecyclerView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,11 +52,15 @@ class ListNewsFragment : Fragment() {
         val adapter = ListNewsAdapter()
         val config = Config(
             pageSize = 5,
-            prefetchDistance = 1,
-            enablePlaceholders = false
+            prefetchDistance = 5,
+            enablePlaceholders = true
         )
         viewModel = getViewModel { parametersOf(config) }
-        viewModel.newsList.observe(this, Observer { adapter.submitList(it) })
+
+        viewModel.newsList.observe(this, Observer {
+            adapter.submitList(it)
+        })
+
         adapter.setOnSelectedItem(object : OnSelectedItemListener {
             override fun onSelected(position: Int, newsStory: NewsStoryEntity) {
                 val bundle = Bundle()
@@ -73,5 +73,16 @@ class ListNewsFragment : Fragment() {
         })
         recyclerView.adapter = adapter
 
+        swipeRefreshLayout = mBinding.swipeLayout
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh {
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binging = null
     }
 }

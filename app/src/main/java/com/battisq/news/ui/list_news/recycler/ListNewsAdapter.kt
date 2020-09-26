@@ -1,6 +1,8 @@
 package com.battisq.news.ui.list_news.recycler
 
 import android.annotation.SuppressLint
+import android.icu.number.NumberFormatter.with
+import android.icu.number.NumberRangeFormatter.with
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.battisq.news.R
 import com.battisq.news.data.room.entities.NewsStoryEntity
+import com.squareup.picasso.Picasso
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -73,7 +76,9 @@ class ListNewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @SuppressLint("NewApi")
     fun bind(el: NewsStoryEntity?) {
-        //TODO - image
+        if (el?.imageToUrl != null && !el.imageToUrl.isBlank())
+            Picasso.get().load(el.imageToUrl).into(image)
+
         title.text = el?.title
         description.text = el?.description
         date.text = el?.date?.format(

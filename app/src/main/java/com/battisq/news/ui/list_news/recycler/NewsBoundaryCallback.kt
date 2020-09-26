@@ -10,29 +10,32 @@ import kotlin.concurrent.thread
 class NewsBoundaryCallback(private val newsApi: NewsApi, private val newsDao: NewsDao) :
     BoundaryCallback<NewsStoryEntity>() {
 
+    var page: Int = 1
+        set(value) {
+            if (field in 1..5)
+                field = value
+        }
+
     override fun onItemAtEndLoaded(itemAtEnd: NewsStoryEntity) {
-        if (page in 1..4)
-            fetchData(++page)
+        if (page in 1..4) {
+            page++
+            fetchData()
+        }
     }
 
     override fun onZeroItemsLoaded() {
-        fetchData(page)
+        fetchData()
     }
 
-    private fun fetchData(page: Int) {
+    private fun fetchData() {
         thread {
             val list = mutableListOf<NewsStoryEntity>()
-            val test = newsApi.getNews(page).execute()
-            val news = test.body()?.articles
+            val news = newsApi.getNews(page).execute().body()?.articles
 
             news!!.forEach { value ->
                 list.add(NewsStoryEntity.create(value))
             }
             newsDao.insertMany(list)
         }
-    }
-
-    companion object {
-        var page: Int = 1
     }
 }
