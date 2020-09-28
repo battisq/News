@@ -7,7 +7,12 @@ import com.battisq.news.data.room.dao.NewsDao
 import com.battisq.news.data.room.entities.NewsStoryEntity
 import kotlin.concurrent.thread
 
-class NewsBoundaryCallback(private val newsApi: NewsApi, private val newsDao: NewsDao) :
+class NewsBoundaryCallback(
+    private val newsApi: NewsApi,
+    private val newsDao: NewsDao,
+    private val hasConnection: () -> Boolean,
+    private val onFail: () -> Unit
+) :
     BoundaryCallback<NewsStoryEntity>() {
 
     var page: Int = 1
@@ -17,17 +22,21 @@ class NewsBoundaryCallback(private val newsApi: NewsApi, private val newsDao: Ne
         }
 
     override fun onItemAtEndLoaded(itemAtEnd: NewsStoryEntity) {
-        if (page in 1..4) {
+        if (hasConnection() && page in 1..4) {
             page++
             fetchData()
-        }
+        } else
+            onFail()
     }
 
     override fun onZeroItemsLoaded() {
-        fetchData()
+        if (hasConnection())
+            fetchData()
+        else
+            onFail()
     }
 
-    private fun fetchData() {
+    fun fetchData() {
         thread {
             val list = mutableListOf<NewsStoryEntity>()
             val news = newsApi.getNews(page).execute().body()?.articles
@@ -38,4 +47,6 @@ class NewsBoundaryCallback(private val newsApi: NewsApi, private val newsDao: Ne
             newsDao.insertMany(list)
         }
     }
+
+
 }

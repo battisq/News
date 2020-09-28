@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.paging.Config
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.battisq.news.R
@@ -15,9 +16,11 @@ import com.battisq.news.data.room.entities.NewsStoryEntity
 import com.battisq.news.databinding.ListNewsFragmentBinding
 import com.battisq.news.ui.MainActivity
 import com.battisq.news.ui.list_news.recycler.ListNewsAdapter
+import com.battisq.news.ui.list_news.recycler.NewsBoundaryCallback
 import com.battisq.news.ui.list_news.recycler.OnSelectedItemListener
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -55,7 +58,12 @@ class ListNewsFragment : Fragment() {
             prefetchDistance = 5,
             enablePlaceholders = true
         )
-        viewModel = getViewModel { parametersOf(config) }
+
+        val hasConnection: () -> Boolean = { ListNewsViewModel.hasConnection(context!!) }
+        val onFail: () -> Unit = {  }
+        val boundaryCallback = get<NewsBoundaryCallback> { parametersOf(hasConnection, onFail) }
+
+        viewModel = getViewModel { parametersOf(config, boundaryCallback) }
 
         viewModel.newsList.observe(this, Observer {
             adapter.submitList(it)

@@ -9,11 +9,12 @@ import org.koin.dsl.module
 val appModule = module {
 
     viewModel {
-        (config: PagedList.Config) ->
-        ListNewsViewModel(get(), config)
+        (config: PagedList.Config, boundaryCallback: NewsBoundaryCallback) ->
+        ListNewsViewModel(get(), config, boundaryCallback)
     }
 
     factory {
-        NewsBoundaryCallback(get(), get())
+        (hasConnection: () -> Boolean, onFail: () -> Unit) ->
+        NewsBoundaryCallback(get(), get(), hasConnection, onFail)
     }
 }
