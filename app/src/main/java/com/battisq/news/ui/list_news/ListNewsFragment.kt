@@ -1,5 +1,6 @@
 package com.battisq.news.ui.list_news
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.battisq.news.ui.list_news.recycler.ListNewsAdapter
 import com.battisq.news.ui.list_news.recycler.NewsBoundaryCallback
 import com.battisq.news.ui.list_news.recycler.OnSelectedItemListener
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
@@ -29,7 +31,8 @@ class ListNewsFragment : Fragment() {
     private lateinit var viewModel: ListNewsViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var fab: ExtendedFloatingActionButton
+    private lateinit var fabRetry: ExtendedFloatingActionButton
+    private lateinit var fabScroll: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +47,7 @@ class ListNewsFragment : Fragment() {
         initialization()
     }
 
+    @SuppressLint("NewApi")
     private fun initialization() {
         recyclerView = mBinding.recyclerView
         val adapter = ListNewsAdapter()
@@ -53,20 +57,26 @@ class ListNewsFragment : Fragment() {
             enablePlaceholders = true
         )
 
-        fab = mBinding.fab
-        fab.setOnClickListener {
+        fabRetry = mBinding.fabRetry
+        fabRetry.setOnClickListener {
             if (ListNewsViewModel.hasConnection(context!!)) {
                 viewModel.retry {
-                    fab.visibility = View.GONE
-                    Toast.makeText(context!!, "Интернета не хватает", Toast.LENGTH_LONG).show()
+                    fabRetry.visibility = View.GONE
                 }
             } else {
-                Toast.makeText(context!!, "Интернета всё ещё нет", Toast.LENGTH_LONG).show()
+                Toast.makeText(context!!, getString(R.string.text_no_Internet), Toast.LENGTH_LONG)
+                    .show()
             }
         }
 
+        fabScroll = mBinding.fabScroll
+        fabScroll.setOnClickListener {
+            recyclerView.scrollToPosition(0)
+            fabScroll.visibility = View.GONE
+        }
+
         val hasConnection: () -> Boolean = { ListNewsViewModel.hasConnection(context!!) }
-        val onFail: () -> Unit = { fab.visibility = View.VISIBLE }
+        val onFail: () -> Unit = { fabRetry.visibility = View.VISIBLE }
         val boundaryCallback = get<NewsBoundaryCallback> { parametersOf(hasConnection, onFail) }
 
         viewModel = getViewModel { parametersOf(config, boundaryCallback) }
@@ -85,11 +95,24 @@ class ListNewsFragment : Fragment() {
             }
         })
         recyclerView.adapter = adapter
+        recyclerView.setOnScrollChangeListener { view, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if ((scrollY - oldScrollY) <= -3)
+                fabScroll.visibility = View.VISIBLE
+            else if ((scrollY - oldScrollY) >= 3)
+                fabScroll.visibility = View.GONE
+        }
 
         swipeRefreshLayout = mBinding.swipeLayout
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.refresh {
                 swipeRefreshLayout.isRefreshing = false
+                
+                if (!ListNewsViewModel.hasConnection(context!!))
+                    Toast.makeText(
+                        context!!,
+                        getString(R.string.text_no_Internet),
+                        Toast.LENGTH_LONG
+                    ).show()
             }
         }
     }

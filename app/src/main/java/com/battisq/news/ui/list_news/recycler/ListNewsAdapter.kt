@@ -1,8 +1,6 @@
 package com.battisq.news.ui.list_news.recycler
 
 import android.annotation.SuppressLint
-import android.icu.number.NumberFormatter.with
-import android.icu.number.NumberRangeFormatter.with
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +23,7 @@ class ListNewsAdapter() :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListNewsHolder {
         val view: View =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.list_news_large_item, parent, false)
+                .inflate(R.layout.list_news_item, parent, false)
 
         val holder = ListNewsHolder(view)
 

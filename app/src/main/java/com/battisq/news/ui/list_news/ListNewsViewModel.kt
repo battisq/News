@@ -51,7 +51,7 @@ class ListNewsViewModel(
             boundaryCallback?.page = 1
             newsDao.deleteAll()
             newsListDataSource.invalidate()
-            onSuccess()
+            viewModelScope.launch(Dispatchers.Main) { onSuccess() }
         }
     }
 

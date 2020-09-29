@@ -16,19 +16,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_news_large_item" />
+            tools:listitem="@layout/list_news_item" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/app_margin"
+        android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:text="@string/text_btn_retry"
+        android:visibility="gone"
+        app:icon="@drawable/ic_round_replay_24"
+        app:layout_anchor="@id/swipe_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/app_margin"
+        android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:src="@drawable/ic_round_arrow_upward_24"
+        app:backgroundTint="@color/colorAccent"
         app:layout_anchor="@id/swipe_layout"
         android:visibility="gone"
-        app:layout_anchorGravity="bottom|center"
-        android:text="@string/text_btn_retry"
-        app:icon="@drawable/ic_round_replay_24" />
+        app:layout_anchorGravity="bottom|end" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

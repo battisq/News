@@ -24,6 +24,13 @@ class ItemNewsFragment : Fragment() {
     ): View? {
         binding = ItemNewsFragmentBinding.inflate(inflater, container, false)
 
+        initActionMode()
+        initWebView(savedInstanceState)
+
+        return mBinding.root
+    }
+
+    private fun initActionMode() {
         val callback = object : androidx.appcompat.view.ActionMode.Callback {
 
             var statusBarColor: Int = 0
@@ -63,14 +70,10 @@ class ItemNewsFragment : Fragment() {
         }
 
         (activity as MainActivity).startSupportActionMode(callback)
-
-        return mBinding.root
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun onStart() {
-        super.onStart()
-
+    private fun initWebView(savedInstanceState: Bundle?) {
         urlSite = arguments?.getString("urlSite")!!
 
         webView = mBinding.webView
@@ -82,6 +85,16 @@ class ItemNewsFragment : Fragment() {
             }
         }
 
-        webView.loadUrl(urlSite)
+        if (savedInstanceState == null)
+            webView.loadUrl(urlSite)
+        else
+            webView.restoreState(savedInstanceState.getBundle("webViewState")!!)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val bundle = Bundle()
+        webView.saveState(bundle)
+        outState.putBundle("webViewState", bundle)
     }
 }
