@@ -10,13 +10,13 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.battisq.news.R
-import com.battisq.news.data.room.entities.NewsStoryEntity
+import com.battisq.news.data.room.entities.NewsStory
 import com.squareup.picasso.Picasso
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ListNewsAdapter() :
-    PagedListAdapter<NewsStoryEntity, ListNewsHolder>(DIFF_CALLBACK) {
+    PagedListAdapter<NewsStory, ListNewsHolder>(DIFF_CALLBACK) {
 
     private var onSelectedItemListener: OnSelectedItemListener? = null
 
@@ -37,7 +37,7 @@ class ListNewsAdapter() :
         return holder
     }
 
-    private fun runOnSelectedItem(position: Int, item: NewsStoryEntity) =
+    private fun runOnSelectedItem(position: Int, item: NewsStory) =
         onSelectedItemListener?.onSelected(position, item)
 
     fun setOnSelectedItem(listener: OnSelectedItemListener) {
@@ -50,17 +50,17 @@ class ListNewsAdapter() :
 
     companion object {
         private val DIFF_CALLBACK = object :
-            DiffUtil.ItemCallback<NewsStoryEntity>() {
+            DiffUtil.ItemCallback<NewsStory>() {
             // Concert details may have changed if reloaded from the database,
             // but ID is fixed.
             override fun areItemsTheSame(
-                oldNewsStory: NewsStoryEntity,
-                newNewsStory: NewsStoryEntity
-            ) = oldNewsStory.id == newNewsStory.id
+                oldNewsStory: NewsStory,
+                newNewsStory: NewsStory
+            ) = oldNewsStory.url == newNewsStory.url
 
             override fun areContentsTheSame(
-                oldNewsStory: NewsStoryEntity,
-                newNewsStory: NewsStoryEntity
+                oldNewsStory: NewsStory,
+                newNewsStory: NewsStory
             ) = oldNewsStory == newNewsStory
         }
     }
@@ -73,7 +73,7 @@ class ListNewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var date: TextView = itemView.findViewById(R.id.item_news_date)
 
     @SuppressLint("NewApi")
-    fun bind(el: NewsStoryEntity?) {
+    fun bind(el: NewsStory?) {
         if (el?.imageToUrl != null && !el.imageToUrl.isBlank())
             Picasso.get().load(el.imageToUrl).into(image)
 
@@ -90,5 +90,5 @@ class ListNewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 interface OnSelectedItemListener {
-    fun onSelected(position: Int, newsStory: NewsStoryEntity)
+    fun onSelected(position: Int, newsStory: NewsStory)
 }

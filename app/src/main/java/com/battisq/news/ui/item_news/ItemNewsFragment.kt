@@ -66,7 +66,6 @@ class ItemNewsFragment : Fragment() {
                     .navController
                     .navigate(R.id.action_itemNewsFragment_to_listNewsFragment)
             }
-
         }
 
         (activity as MainActivity).startSupportActionMode(callback)

@@ -1,10 +1,8 @@
 package com.battisq.news.data.api
 
 import com.battisq.news.data.json.News
-import com.battisq.news.data.json.NewsStory
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface NewsApi {

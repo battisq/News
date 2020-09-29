@@ -1,12 +1,16 @@
 package com.battisq.news.data.json
 
+/**
+ * Дата-классы для хранения данных, полученных с NewsApi
+ */
+
 data class News(
     var status: String,
     var totalResults: Int,
-    var articles: MutableList<NewsStory>
+    var articles: MutableList<Article>
 )
 
-data class NewsStory(
+data class Article(
     var source: Source,
     var author: Any?,
     var title: String?,
