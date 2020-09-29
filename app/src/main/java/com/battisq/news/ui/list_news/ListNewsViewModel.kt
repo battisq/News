@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
-
 class ListNewsViewModel(
     private val newsDao: NewsDao,
     pagingConfig: PagedList.Config? = null,
@@ -56,9 +55,10 @@ class ListNewsViewModel(
         }
     }
 
-    fun retry() {
+    fun retry(onSuccess: () -> Unit) {
         boundaryCallback?.page = boundaryCallback?.page?.plus(1)!!
         boundaryCallback?.fetchData()
+        onSuccess()
     }
 
     companion object {

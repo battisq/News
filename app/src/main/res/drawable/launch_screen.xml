@@ -14,9 +14,4 @@
             android:src="@drawable/cats" />
     </item>
 
-<!--    <item>-->
-<!--        <bitmap-->
-<!--            android:gravity="bottom|right"-->
-<!--            android:src="@drawable/cat_2" />-->
-<!--    </item>-->
 </layer-list>

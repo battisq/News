@@ -1,14 +1,13 @@
 package com.battisq.news.ui.list_news
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.paging.Config
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.battisq.news.R
@@ -18,24 +17,19 @@ import com.battisq.news.ui.MainActivity
 import com.battisq.news.ui.list_news.recycler.ListNewsAdapter
 import com.battisq.news.ui.list_news.recycler.NewsBoundaryCallback
 import com.battisq.news.ui.list_news.recycler.OnSelectedItemListener
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
-
 class ListNewsFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = ListNewsFragment()
-    }
 
     private var binging: ListNewsFragmentBinding? = null
     private val mBinding: ListNewsFragmentBinding get() = binging!!
     private lateinit var viewModel: ListNewsViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var fab: ExtendedFloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,12 +53,23 @@ class ListNewsFragment : Fragment() {
             enablePlaceholders = true
         )
 
+        fab = mBinding.fab
+        fab.setOnClickListener {
+            if (ListNewsViewModel.hasConnection(context!!)) {
+                viewModel.retry {
+                    fab.visibility = View.GONE
+                    Toast.makeText(context!!, "Интернета не хватает", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context!!, "Интернета всё ещё нет", Toast.LENGTH_LONG).show()
+            }
+        }
+
         val hasConnection: () -> Boolean = { ListNewsViewModel.hasConnection(context!!) }
-        val onFail: () -> Unit = {  }
+        val onFail: () -> Unit = { fab.visibility = View.VISIBLE }
         val boundaryCallback = get<NewsBoundaryCallback> { parametersOf(hasConnection, onFail) }
 
         viewModel = getViewModel { parametersOf(config, boundaryCallback) }
-
         viewModel.newsList.observe(this, Observer {
             adapter.submitList(it)
         })
