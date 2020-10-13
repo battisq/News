@@ -77,7 +77,11 @@ class ListNewsViewModel(
     private fun fetchData() {
         viewModelScope.launch(Dispatchers.IO) {
             val list = mutableListOf<NewsStory>()
-            val news = newsApi.getNews(boundaryCallback.page).execute().body()?.articles
+            val news = newsApi
+                .getNews(page = boundaryCallback.page)
+                .execute()
+                .body()
+                ?.articles
 
             news!!.forEach { value ->
                 list.add(NewsStory.create(value))
