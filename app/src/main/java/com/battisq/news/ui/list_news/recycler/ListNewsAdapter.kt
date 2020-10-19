@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.battisq.news.R
 import com.battisq.news.data.room.entities.NewsStory
+import com.battisq.news.databinding.ListNewsItemBinding
 import com.squareup.picasso.Picasso
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -21,11 +22,12 @@ class ListNewsAdapter() :
     private var onSelectedItemListener: OnSelectedItemListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListNewsHolder {
-        val view: View =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.list_news_item, parent, false)
+        val inflater: LayoutInflater = LayoutInflater.from(parent.context)
 
-        val holder = ListNewsHolder(view)
+        val binding: ListNewsItemBinding =
+            ListNewsItemBinding.inflate(inflater, parent, false)
+
+        val holder = ListNewsHolder(binding)
 
         holder.itemView.setOnClickListener {
             val position = holder.adapterPosition
@@ -66,20 +68,16 @@ class ListNewsAdapter() :
     }
 }
 
-class ListNewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var image: ImageView = itemView.findViewById(R.id.item_news_image)
-    var title: TextView = itemView.findViewById(R.id.item_news_title)
-    var description: TextView = itemView.findViewById(R.id.item_news_description)
-    var date: TextView = itemView.findViewById(R.id.item_news_date)
+class ListNewsHolder(private val binding: ListNewsItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("NewApi")
     fun bind(el: NewsStory?) {
         if (el?.imageToUrl != null && !el.imageToUrl.isBlank())
-            Picasso.get().load(el.imageToUrl).into(image)
+            Picasso.get().load(el.imageToUrl).into(binding.itemNewsImage)
 
-        title.text = el?.title
-        description.text = el?.description
-        date.text = el?.date?.format(
+        binding.itemNewsTitle.text = el?.title
+        binding.itemNewsDescription.text = el?.description
+        binding.itemNewsDate.text = el?.date?.format(
             DateTimeFormatter
                 .ofPattern(
                     "HH:mm dd.MM.yyyy",

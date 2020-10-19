@@ -3,4 +3,7 @@
     <string name="title">News</string>
     <string name="text_btn_retry">Повторить</string>
     <string name="text_no_Internet">Отсутствует Интернет</string>
+    <string name="news_fragment_title">News</string>
+    <string name="map_fragment_title">Map</string>
+    <string name="news_story_fragment_title">New story</string>
 </resources>

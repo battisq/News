@@ -24,9 +24,9 @@ class ItemNewsFragment : Fragment() {
     ): View? {
         binding = ItemNewsFragmentBinding.inflate(inflater, container, false)
 
-        initActionMode()
+        //initActionMode()
         initWebView(savedInstanceState)
-
+        (activity as MainActivity).mToolbar.title = urlSite
         return mBinding.root
     }
 
@@ -64,7 +64,7 @@ class ItemNewsFragment : Fragment() {
 
                 (activity as MainActivity)
                     .navController
-                    .navigate(R.id.action_itemNewsFragment_to_listNewsFragment)
+                    .navigate(R.id.action_navigation_news_story_to_navigation_news)
             }
         }
 

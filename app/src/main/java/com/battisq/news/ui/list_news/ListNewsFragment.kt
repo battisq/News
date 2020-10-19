@@ -114,7 +114,7 @@ class ListNewsFragment : Fragment() {
 
                 (activity as MainActivity)
                     .navController
-                    .navigate(R.id.action_listNewsFragment_to_itemNewsFragment, bundle)
+                    .navigate(R.id.action_navigation_news_to_itemNewsFragment, bundle)
             }
         })
 
