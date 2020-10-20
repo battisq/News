@@ -6,4 +6,6 @@
     <string name="news_fragment_title">News</string>
     <string name="map_fragment_title">Map</string>
     <string name="news_story_fragment_title">New story</string>
+    <string name="text_turn_on_geolocation">Включите геолокацию</string>
+    <string name="text_permission_denied">Доступ запрещён</string>
 </resources>
