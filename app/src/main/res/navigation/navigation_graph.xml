@@ -12,24 +12,20 @@
         android:label="@string/news_fragment_title"
         tools:layout="@layout/list_news_fragment" >
         <action
-            android:id="@+id/action_navigation_news_to_itemNewsFragment"
-            app:destination="@id/navigation_news_story" />
-    </fragment>
-    <fragment
-        android:id="@+id/navigation_news_story"
-        android:name="com.battisq.news.ui.item_news.ItemNewsFragment"
-        android:label="@string/news_story_fragment_title"
-        tools:layout="@layout/item_news_fragment" >
-        <action
-            android:id="@+id/action_navigation_news_story_to_navigation_news"
-            app:destination="@id/navigation_news"
-            app:popUpTo="@id/navigation_news"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_navigation_news_to_webViewActivity"
+            app:destination="@id/webViewActivity"
+            app:enterAnim="@anim/slide_to_top"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/navigation_map"
         android:name="com.battisq.news.ui.map.MapFragment"
         android:label="@string/map_fragment_title"
         tools:layout="@layout/map_fragment" />
+    <activity
+        android:id="@+id/webViewActivity"
+        android:name="com.battisq.news.ui.activities.WebViewActivity"
+        android:label="activity_web_view"
+        tools:layout="@layout/activity_web_view" />
 
 </navigation>

@@ -25,4 +25,11 @@
         <item name="background" tools:ignore="PrivateResource">@color/material_grey_900</item>
     </style>
 
+    <style name="AppTheme.Web" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@android:color/darker_gray</item>
+        <item name="colorPrimaryDark">@android:color/darker_gray</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_close_24</item>
+        <item name="titleTextColor">@android:color/black</item>
+    </style>
 </resources>

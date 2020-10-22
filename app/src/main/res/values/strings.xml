@@ -8,4 +8,6 @@
     <string name="news_story_fragment_title">New story</string>
     <string name="text_turn_on_geolocation">Включите геолокацию</string>
     <string name="text_permission_denied">Доступ запрещён</string>
+    <string name="retry">Повторить</string>
+    <string name="text_loading_error">Ошибка загрузки</string>
 </resources>

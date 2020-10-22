@@ -1,8 +1,11 @@
 package com.battisq.news.ui.list_news.recycler
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList.BoundaryCallback
+import com.battisq.news.R
 import com.battisq.news.data.room.entities.NewsStory
+import com.battisq.news.domain.network.NetworkState
 
 class NewsBoundaryCallback(
     private val fetchDataWorker: FetchDataWorker,
@@ -12,7 +15,7 @@ class NewsBoundaryCallback(
 ) :
     BoundaryCallback<NewsStory>() {
 
-
+    val networkState: MutableLiveData<NetworkState> = MutableLiveData()
     var page: Int = initPageValue
         set(value) {
             if (field in 1..5)
@@ -26,15 +29,19 @@ class NewsBoundaryCallback(
                 Log.e(this::class.simpleName, page.toString())
                 fetchDataWorker.fetchData()
             }
-        } else
+        } else {
+            networkState.postValue(NetworkState.error("Отсутствует интернет"))
             onFail()
+        }
     }
 
     override fun onZeroItemsLoaded() {
         if (hasConnection())
             fetchDataWorker.fetchData()
-        else
+        else {
+            NetworkState.error("Отсутствует интернет")
             onFail()
+        }
     }
 }
 

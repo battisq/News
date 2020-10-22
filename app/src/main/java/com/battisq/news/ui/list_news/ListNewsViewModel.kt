@@ -15,6 +15,8 @@ import androidx.paging.toLiveData
 import com.battisq.news.data.api.NewsApi
 import com.battisq.news.data.room.dao.NewsDao
 import com.battisq.news.data.room.entities.NewsStory
+import com.battisq.news.domain.network.NetworkState
+import com.battisq.news.domain.network.Status
 import com.battisq.news.ui.App
 import com.battisq.news.ui.list_news.recycler.FetchDataWorker
 import com.battisq.news.ui.list_news.recycler.NewsBoundaryCallback
@@ -23,7 +25,6 @@ import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.koin.core.parameter.parametersOf
-import kotlin.concurrent.thread
 
 
 class ListNewsViewModel(
@@ -36,6 +37,8 @@ class ListNewsViewModel(
     AndroidViewModel(application),
     KoinComponent,
     LifecycleObserver {
+
+    var recyclerViewState: Parcelable? = null
 
     private val boundaryCallback = get<NewsBoundaryCallback> {
         parametersOf(
@@ -57,14 +60,15 @@ class ListNewsViewModel(
             boundaryCallback = boundaryCallback
         )
 
-    var recyclerViewState: Parcelable? = null
+    val networkState: MutableLiveData<NetworkState> = boundaryCallback.networkState
 
-    fun refresh(onSuccess: () -> Unit) {
+    fun refresh(onAction: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             boundaryCallback.page = 1
             newsDao.deleteAll()
             newsListDataSource.invalidate()
-            viewModelScope.launch(Dispatchers.Main) { onSuccess() }
+            viewModelScope.launch(Dispatchers.Main) { onAction() }
+            retry(onAction)
         }
     }
 
@@ -76,6 +80,7 @@ class ListNewsViewModel(
 
     private fun fetchData() {
         viewModelScope.launch(Dispatchers.IO) {
+            networkState.postValue(NetworkState.LOADING)
             val list = mutableListOf<NewsStory>()
             val news = newsApi
                 .getNews(page = boundaryCallback.page)
@@ -88,6 +93,7 @@ class ListNewsViewModel(
             }
 
             newsDao.insertMany(list)
+            networkState.postValue(NetworkState.LOADED)
         }
     }
 

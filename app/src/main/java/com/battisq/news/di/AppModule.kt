@@ -28,5 +28,5 @@ val appModule = module {
         NewsBoundaryCallback(worker, hasConnection, onFail, page)
     }
 
-    factory { ListNewsAdapter() }
+    factory { (retryCallback: () -> Unit) -> ListNewsAdapter(retryCallback) }
 }
