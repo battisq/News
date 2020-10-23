@@ -1,10 +1,8 @@
 package com.battisq.news.presentation.ui.list_news
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.os.Message
 import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.*
@@ -25,8 +23,7 @@ import org.koin.core.KoinComponent
 
 class ListNewsViewModel(
     application: Application,
-    pagingConfig: PagedList.Config? = null,
-    private val fetchDataListener: FetchDataListener,
+    pagingConfig: PagedList.Config,
     private val wirelessServicesRepository: WirelessServicesRepository,
     private val newsDataInteractor: NewsDataInteractor
 ) :
@@ -37,8 +34,9 @@ class ListNewsViewModel(
     var recyclerViewState: Parcelable? = null
     var networkState: MutableLiveData<NetworkState>
     lateinit var newsList: LiveData<PagedList<NewsStory>>
-    private lateinit var newsListDataSource: DataSource<Int, NewsStory>
+    private var fetchDataListener: OnFetchDataListener? = null
     private var boundaryCallback: NewsBoundaryCallback
+    private lateinit var newsListDataSource: DataSource<Int, NewsStory>
 
     init {
         boundaryCallback = NewsBoundaryCallback(
@@ -47,8 +45,13 @@ class ListNewsViewModel(
                     this@ListNewsViewModel.fetchNews()
                 }
 
-                override fun onFailData(message: String?) = fetchDataListener.onFail(message)
-                override fun onEndData() = fetchDataListener.onEndData()
+                override fun onFailData(message: String?) {
+                    fetchDataListener?.onFail(message)
+                }
+
+                override fun onEndData() {
+                    fetchDataListener?.onEndData()
+                }
             },
             this::hasConnection,
             loadPageValue()
@@ -57,7 +60,7 @@ class ListNewsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             newsListDataSource = newsDataInteractor.getAllNews().create()
             newsList = newsDataInteractor.getAllNews().toLiveData(
-                config = pagingConfig!!,
+                config = pagingConfig,
                 boundaryCallback = boundaryCallback
             )
 
@@ -67,10 +70,10 @@ class ListNewsViewModel(
 
     fun refresh() {
         viewModelScope.launch(Dispatchers.IO) {
-            boundaryCallback.page = 1
             newsDataInteractor.deleteAllNews()
             newsListDataSource.invalidate()
-            retry({})
+            boundaryCallback.page = 1
+            fetchNews()
         }
     }
 
@@ -86,6 +89,10 @@ class ListNewsViewModel(
             newsDataInteractor.fetchNews(boundaryCallback.page)
             networkState.postValue(NetworkState.LOADED)
         }
+    }
+
+    fun setOnFetchDataListener (fetchDataListener: OnFetchDataListener) {
+        this.fetchDataListener = fetchDataListener
     }
 
     fun hasConnection(): Boolean {
@@ -110,7 +117,7 @@ class ListNewsViewModel(
     }
 }
 
-interface FetchDataListener {
+interface OnFetchDataListener {
     fun onSuccess()
     fun onFail(message: String?)
     fun onEndData()
