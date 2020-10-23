@@ -2,7 +2,7 @@ package com.battisq.news.data.room.dao
 
 import androidx.paging.DataSource
 import androidx.room.*
-import com.battisq.news.data.room.entities.NewsStory
+import com.battisq.news.domain.entities.NewsStory
 
 @Dao
 interface NewsDao {

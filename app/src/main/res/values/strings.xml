@@ -10,4 +10,5 @@
     <string name="text_permission_denied">Доступ запрещён</string>
     <string name="retry">Повторить</string>
     <string name="text_loading_error">Ошибка загрузки</string>
+    <string name="text_end_news">Конец новостей</string>
 </resources>

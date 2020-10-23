@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/navigation_news"
-        android:name="com.battisq.news.ui.list_news.ListNewsFragment"
+        android:name="com.battisq.news.presentation.ui.list_news.ListNewsFragment"
         android:label="@string/news_fragment_title"
         tools:layout="@layout/list_news_fragment" >
         <action
@@ -19,12 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_map"
-        android:name="com.battisq.news.ui.map.MapFragment"
+        android:name="com.battisq.news.presentation.ui.map.MapFragment"
         android:label="@string/map_fragment_title"
         tools:layout="@layout/map_fragment" />
     <activity
         android:id="@+id/webViewActivity"
-        android:name="com.battisq.news.ui.activities.WebViewActivity"
+        android:name="com.battisq.news.presentation.ui.activities.WebViewActivity"
         android:label="activity_web_view"
         tools:layout="@layout/activity_web_view" />
 

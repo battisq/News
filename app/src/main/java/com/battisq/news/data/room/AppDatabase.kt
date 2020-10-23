@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.battisq.news.data.room.converters.LocaleDateTimeConverter
 import com.battisq.news.data.room.dao.NewsDao
-import com.battisq.news.data.room.entities.NewsStory
+import com.battisq.news.domain.entities.NewsStory
 
 @TypeConverters(LocaleDateTimeConverter::class)
 @Database(entities = [NewsStory::class], version = 1)

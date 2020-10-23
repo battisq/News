@@ -1,15 +1,11 @@
 package com.battisq.news.data.api
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.battisq.news.data.json.News
+import com.battisq.news.data.entities.News
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 interface NewsApi {
 

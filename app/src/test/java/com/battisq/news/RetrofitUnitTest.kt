@@ -1,9 +1,8 @@
 package com.battisq.news
 
+import com.battisq.news.app.di.*
 import com.battisq.news.data.api.NewsApi
-import com.battisq.news.di.appModule
-import com.battisq.news.di.retrofitModule
-import com.battisq.news.di.roomDataSourceModule
+import com.battisq.news.domain.interactors.NewsDataInteractor
 import org.junit.Before
 import org.junit.Test
 import org.koin.core.KoinComponent
@@ -14,21 +13,16 @@ import org.junit.Assert.*
 class RetrofitUnitTest : KoinComponent {
 
     val TAG: String? = RetrofitUnitTest::class.simpleName
-    lateinit var api: NewsApi
+    lateinit var interactor: NewsDataInteractor
 
     @Before
     fun init() {
-        startKoin { modules(appModule, retrofitModule, roomDataSourceModule) }
-        api = get()
+        startKoin { modules(presentationModule, domainModule, dataModule) }
+        interactor = get()
     }
 
     @Test
     fun getNews() {
 
-        val news =  api
-            .getNews(1)
-            .execute()
-            .body()
-        assertEquals(news, news)
     }
 }
